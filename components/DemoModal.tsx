@@ -25,24 +25,38 @@ export function DemoModal({ open, onClose }: DemoModalProps) {
 
     const formData = new FormData(e.currentTarget);
     const data = {
-      name: formData.get('name'),
-      company: formData.get('company'),
-      email: formData.get('email'),
-      message: formData.get('message'),
+      name: formData.get('name') as string,
+      company: formData.get('company') as string,
+      email: formData.get('email') as string,
+      message: formData.get('message') as string,
     };
 
     try {
-      // Send email using a simple mailto link for now
-      const mailtoLink = `mailto:ajramson@pcgadvisory.com?subject=Demo Request from ${data.name} at ${data.company}&body=Name: ${data.name}%0D%0ACompany: ${data.company}%0D%0AEmail: ${data.email}%0D%0A%0D%0AMessage:%0D%0A${data.message}`;
-      window.open(mailtoLink);
+      // Create mailto link
+      const subject = `Demo Request from ${data.name} at ${data.company}`;
+      const body = `Name: ${data.name}\nCompany: ${data.company}\nEmail: ${data.email}\n\nMessage:\n${data.message}`;
+      const mailtoLink = `mailto:ajramson@pcgadvisory.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       
-      setSubmitted(true);
-      setTimeout(() => {
+      // Try to open email client
+      const emailWindow = window.open(mailtoLink, '_blank');
+      
+      if (emailWindow) {
+        // Email client opened successfully
+        setSubmitted(true);
+        setTimeout(() => {
+          onClose();
+          setSubmitted(false);
+        }, 3000);
+      } else {
+        // Fallback: show email content and copy to clipboard
+        const emailContent = `To: ajramson@pcgadvisory.com\nSubject: ${subject}\n\n${body}`;
+        navigator.clipboard.writeText(emailContent);
+        alert('Email client could not be opened. Email content has been copied to your clipboard. Please paste it into your email client and send to ajramson@pcgadvisory.com');
         onClose();
-        setSubmitted(false);
-      }, 2000);
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
+      alert('There was an error submitting the form. Please email ajramson@pcgadvisory.com directly.');
     } finally {
       setIsSubmitting(false);
     }
