@@ -48,9 +48,8 @@ export function DemoModal({ open, onClose }: DemoModalProps) {
             <label htmlFor="message" className="text-sm font-medium text-gray-700">Message</label>
             <textarea id="message" name="message" rows={3} className="rounded-xl border border-gray-300 px-3 py-2 focus-ring" />
           </div>
-          <div className="mt-2 flex items-center gap-3">
+          <div className="mt-2">
             <button className="inline-flex items-center rounded-xl bg-primary-600 px-5 py-2.5 text-white hover:bg-primary-500 focus-ring" type="submit">Submit</button>
-            <a href="mailto:sales@aiirhub.com" className="rounded-xl border border-gray-300 px-5 py-2.5 text-gray-700 hover:bg-gray-50 focus-ring">Contact Sales</a>
           </div>
         </form>
       </div>
